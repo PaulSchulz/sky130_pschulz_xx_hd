@@ -9,18 +9,32 @@ Author: Paul Schulz <paul@mawsonlakes.org>
 
 License: Apache License Version 2.0
 
-+ font-sky130 - A font rendered in layer 'metal1' for adding annotations to die.
+Contents
+--------
 
-+ logos - A collection of logos rendered for use on the die produced by the
-          SkyWater 130nm PDK
+font-sky130
+~~~~~~~~~~~
+
+A font rendered in layer 'metal1' for adding annotations to die.
+
+logos
+~~~~~
+
+A collection of logos rendered for use on the die produced by the SkyWater 130nm
+PDK
+
+* open-source-hardware 
+
+Usage
+-----
 
 To use with Magic, checkout the repository and ensure that the path is in the
 search path that Magic uses for cell.
 
-Checkout
+Checkout::
 
   git clone https://github.com/PaulSchulz/sky130_ml_xx_hd.git
 
-then in magic:
+then in magic::
 
   addpath ./sky130_ml_xx_hd/mag
