@@ -1,14 +1,16 @@
 magic
 tech sky130A
-timestamp 1598177753
+timestamp 1598836169
 << metal1 >>
-rect 130 70 155 75
-rect 125 65 160 70
-rect 120 55 165 65
-rect 120 20 135 55
-rect 150 45 165 55
-rect 150 20 165 25
-rect 120 10 165 20
-rect 125 5 160 10
-rect 130 0 155 5
+rect 10 70 35 75
+rect 5 65 40 70
+rect 0 55 45 65
+rect 0 20 15 55
+rect 30 45 45 55
+rect 30 20 45 25
+rect 0 10 45 20
+rect 5 5 40 10
+rect 10 0 35 5
+<< properties >>
+string FIXED_BBOX 0 -30 60 105
 << end >>
