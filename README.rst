@@ -1,9 +1,9 @@
-:lib:`sky130_ml_xx_hd` - SKY130 High Density Miscellanious Cells (MawsonLakes.Org Provided)
-===========================================================================================
+:lib:`sky130_pschulz_xx_hd` - SKY130 High Density Miscellanious Cells
+=====================================================================
 
 This library contains miscellaneous ('xx') cells for the SkyWater 130nm PDK
-('sky130') optimized for high density ('hd') and provided by MawsonLakes.Org
-('ml').
+('sky130') optimized for high density ('hd') and provided by Paul Schulz of
+MawsonLakes.Org ('pschulz').
 
 Author: Paul Schulz <paul@mawsonlakes.org>
 
@@ -33,8 +33,15 @@ search path that Magic uses for cell.
 
 Checkout::
 
-  git clone https://github.com/PaulSchulz/sky130_ml_xx_hd.git
+  git clone https://github.com/PaulSchulz/sky130_pschulz_xx_hd.git
 
 then in magic::
 
-  addpath ./sky130_ml_xx_hd/mag
+  addpath ./sky130_pschulz_xx_hd/mag
+
+Alternatively, the library can be checked out into a subdirectory, eg
+'libraries', in which case you want to doe something like::
+
+  addpath ./libraries/sky130_pschulz_xx_hd/mag
+
+
