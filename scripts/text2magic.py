@@ -1,25 +1,21 @@
 #!/usr/bin/python3
 
+# text2magic.py
+#
+# Read a text file from standard input
+# and write out the text as a array of magic cells.
+#
+# Paul Schulz <paul@mawsonlakes.org>
+import sys
 import os.path
 import pprint
 
 debug = 0
+# Used to locate character data files
 path = "libraries/sky130_pschulz_xx_hd/mag/"
 # scale = 2
 
-text = """MawsonLakes.Org - Google + Skywater 130nm Shuttle
-Date: November 2020
-Version: 1
-
-The SKY130 is a mature 180nm-130nm hybrid technology originally
-developed internally by Cypress Semiconductor before being spun out
-into SkyWater Technology and made accessible to general industry.
-SkyWater and Google's collaboration is now making this technology
-accessible to everyone!
-"""
-
-copyright = """© Paul Schulz <paul@mawsonlakes.org>
-License: Apache License Version 2.0"""
+text = ""
 
 characters = """ !"#$%&'()*+,-./
 0123456789:;<=>?
@@ -31,45 +27,51 @@ pqrstuvwxyz{|}~
 😀
 """
 
-def get_cell_name (ch):
+# Covert character id to cellname
+# Accepts character UTF-8 encodings
+def get_cellname (ch):
     """Return name of cell used to store character data"""
 
+    prefix = "font_"
+
     if (ord(ch) < 0x100):
-        cellname = "font_{:02X}".format(ord(ch))
+        cellname = "{:02X}".format(ord(ch))
     elif (ord(ch) < 0x10000):
-        cellname = "font_{:04X}".format(ord(ch))
+        cellname = "{:04X}".format(ord(ch))
     elif (ord(ch) < 0x1000000):
-        cellname = "font_{:06X}".format(ord(ch))
+        cellname = "{:06X}".format(ord(ch))
     else:
-        cellname = "font_{:X}".format(ord(ch))
+        cellname = "{:X}".format(ord(ch))
 
-    return cellname
+    return prefix+cellname
 
-def get_file_name(cellname):
-    filename = get_cell_name(cellname)+".mag"
+# Convert character id to filename
+def get_filename(ch):
+    filename = get_cellname(ch)+".mag"
     return filename
 
-# Test
-def font_status (string):
-    """Check characters in string"""
-    for ch in characters:
-        ch_ord = ord(ch)
+# Check that character data exists
+def check_file_status (ch):
+    """Check character has file"""
 
-        # Handle whitespace
-        if (ch == "\n" or ch == "\t"):
-            ch = ' ';
+    # Handle whitespace
+    if (ch == "\n" or ch == "\t"):
+        ch = ' ';
 
-        filename = get_file_name(ch)
-        msg = filename
-        if (os.path.isfile(path+filename)):
-            msg = msg+" *** Exists "
+    filename = get_filename(ch)
+    if (os.path.isfile(path+filename)):
+        result = 1
+    else:
+        result = 0
 
-        print('  {:s} 0x{:02X} {}'.format(ch, ord(ch), msg))
+    return result
 
 ##############################################################################
+# Read character data
+
 def read_character_cell (character):
     """Read character details from file"""
-    filename = get_file_name(character)
+    filename = get_filename(character)
     file1 = open(path+filename, 'r')
     Lines = file1.readlines()
 
@@ -163,7 +165,7 @@ character location.
     """
     print("# "+character)
     print("pushbox")
-    print("getcell "+get_cell_name(character)+" child 0 0")
+    print("getcell "+get_cellname(character)+" child 0 0")
     print("popbox")
     print("box move r "+str(metrics["skip"]))
     print()
@@ -171,21 +173,28 @@ character location.
 def write_text (message):
     x = 0
     y = 0
-    baselineskip = 1200
+    baselineskip = 400
     metrics = {}
 
+    print("path .:libraries/sky130_pschulz_xx_hd/mag")
+
+    print("snap int")
     print("box position {} {}".format(x,y))
     print()
 
     for char in message:
         if char != "\n":
-            metrics[char] = read_character_cell(char)
+            if check_file_status(char):
+                metrics[char] = read_character_cell(char)
+            else:
+                metrics[char] = read_character_cell("?")
             write_character(char,metrics[char])
         else:
             x = 0
             y = y - baselineskip
             print("box position {} {}".format(x,y))
             print()
+
 
 ##############################################################################
 # Configuration
@@ -197,4 +206,13 @@ def write_text (message):
 # for a in text:
 #    print('{:s} 0x{:02x}'.format(a,ord(a)))
 
-write_text("Test...!!?")
+# write_text("Test...!!?")
+# f = open("demofile.txt", "r")
+# print(f.read())
+
+message = ""
+for line in sys.stdin:
+    message=message+line
+
+write_text(message)
+# print("Counted", len(message))
