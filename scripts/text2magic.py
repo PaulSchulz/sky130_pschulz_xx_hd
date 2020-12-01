@@ -6,26 +6,52 @@
 # and write out the text as a array of magic cells.
 #
 # Paul Schulz <paul@mawsonlakes.org>
+import getopt
 import sys
 import os.path
 import pprint
+
+# Options
+options, remainder = getopt.getopt(sys.argv[1:],
+                                   'c:v:h',
+                                   ['cellname',
+                                    'verbose',
+                                    'help',
+                                   ])
+
+def usage():
+    sys.stderr.write("text2magic.py <options>\n")
+    sys.stderr.write("  Use as filter.\n")
+    sys.stderr.write("  Text on stdin is converted to magic tcl on stdout\n")
+    sys.stderr.write("\n")
+    sys.stderr.write("  Options:\n")
+    sys.stderr.write("    [-c|--cellname] - Required. Cell name to use.\n")
+    sys.stderr.write("    [-v|--verbose]  - Verbose output\n")
+    sys.stderr.write("    [-h|--help]     - Display these details\n")
+
+cellname = '-'
+for opt, arg in options:
+    if opt in ('-c', '--cellname'):
+        cellname = arg
+    elif opt in ('-v', '--verbose'):
+        verbose = True
+    elif opt in ('-h', '--help'):
+        usage()
+        exit()
+    else:
+        usage()
+        exit()
+
+if cellname == '-':
+    usage()
+    sys.stderr.write("\n")
+    sys.stderr.write("*** cellname required\n")
+    exit()
 
 debug = 0
 # Used to locate character data files
 path = "libraries/sky130_pschulz_xx_hd/mag/"
 # scale = 2
-
-text = ""
-
-characters = """ !"#$%&'()*+,-./
-0123456789:;<=>?
-@ABCDEFGHIJKLMNO
-PQRSTUVWXYZ[/]^_
-`abcdefghijklmno
-pqrstuvwxyz{|}~
-©
-😀
-"""
 
 # Covert character id to cellname
 # Accepts character UTF-8 encodings
@@ -177,7 +203,8 @@ def write_text (message):
     metrics = {}
 
     print("path .:libraries/sky130_pschulz_xx_hd/mag")
-
+    print()
+    print("select top cell")
     print("snap int")
     print("box position {} {}".format(x,y))
     print()
@@ -195,6 +222,9 @@ def write_text (message):
             print("box position {} {}".format(x,y))
             print()
 
+    print("")
+    print("gds write gds/{}.gds".format(cellname))
+    print("quit")
 
 ##############################################################################
 # Configuration
