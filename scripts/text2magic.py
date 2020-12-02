@@ -13,8 +13,9 @@ import pprint
 
 # Options
 options, remainder = getopt.getopt(sys.argv[1:],
-                                   'c:v:h',
+                                   'c:l:v:h',
                                    ['cellname',
+                                    'libraries',
                                     'verbose',
                                     'help',
                                    ])
@@ -25,14 +26,18 @@ def usage():
     sys.stderr.write("  Text on stdin is converted to magic tcl on stdout\n")
     sys.stderr.write("\n")
     sys.stderr.write("  Options:\n")
-    sys.stderr.write("    [-c|--cellname] - Required. Cell name to use.\n")
-    sys.stderr.write("    [-v|--verbose]  - Verbose output\n")
-    sys.stderr.write("    [-h|--help]     - Display these details\n")
+    sys.stderr.write("    [-c|--cellname]   - Required. Cell name to use.\n")
+    sys.stderr.write("    [-l|--libraries]  - Location of libraries (default: 'libraries')\n")
+    sys.stderr.write("    [-v|--verbose]    - Verbose output\n")
+    sys.stderr.write("    [-h|--help]       - Display these details\n")
 
-cellname = '-'
+cellname  = '-'
+libraries = 'libraries'
 for opt, arg in options:
     if opt in ('-c', '--cellname'):
         cellname = arg
+    elif opt in ('-l', '--libraries'):
+        libraries = arg
     elif opt in ('-v', '--verbose'):
         verbose = True
     elif opt in ('-h', '--help'):
@@ -50,7 +55,7 @@ if cellname == '-':
 
 debug = 0
 # Used to locate character data files
-path = "libraries/sky130_pschulz_xx_hd/mag/"
+path = libraries+"/sky130_pschulz_xx_hd/mag/"
 # scale = 2
 
 # Covert character id to cellname
@@ -202,7 +207,7 @@ def write_text (message):
     baselineskip = 400
     metrics = {}
 
-    print("path .:libraries/sky130_pschulz_xx_hd/mag")
+    print("path .:"+libraries+"/sky130_pschulz_xx_hd/mag")
     print()
     print("select top cell")
     print("snap int")
@@ -223,7 +228,7 @@ def write_text (message):
             print()
 
     print("")
-    print("gds write gds/{}.gds".format(cellname))
+    print("gds write {}.gds".format(cellname))
     print("quit")
 
 ##############################################################################
